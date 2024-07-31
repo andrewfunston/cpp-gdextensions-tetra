@@ -4,18 +4,16 @@
 #include "entity/character/character.hpp"
 #include "util/bind.hpp"
 
-namespace rl
-{
-    class Enemy : public Character
-    {
-        GDCLASS(Enemy, Character);
+namespace rl {
+class Enemy : public Character {
+    GDCLASS(Enemy, Character);
 
-    public:
-        Enemy();
+public:
+    Enemy();
 
-        using Character::_ready;
+    using Character::_ready;
 
-    protected:
-        static void _bind_methods();
-    };
+protected:
+    static void _bind_methods();
+};
 }

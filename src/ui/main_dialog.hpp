@@ -5,25 +5,22 @@
 
 #include "entity/level.hpp"
 
-namespace rl::inline ui
-{
-    class MainDialog : public godot::Panel
-    {
-        GDCLASS(MainDialog, godot::Panel);
+namespace rl::inline ui {
+class MainDialog : public godot::Panel {
+    GDCLASS(MainDialog, godot::Panel);
 
-    public:
-        MainDialog() = default;
-        ~MainDialog() = default;
+public:
+    MainDialog() = default;
+    ~MainDialog() = default;
 
-        void _ready() override;
-        void _notification(int notification);
+    void _ready() override;
+    void _notification(int notification);
 
-        static void _bind_methods()
-        {
-        }
+    static void _bind_methods() {
+    }
 
-    protected:
-        Level* m_level{ nullptr };
-        godot::RichTextLabel* m_console_label{ nullptr };
-    };
+protected:
+    Level *m_level{nullptr};
+    godot::RichTextLabel *m_console_label{nullptr};
+};
 }
