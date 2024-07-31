@@ -161,9 +161,12 @@ endif()
 # Dependency linkage
 # =======================================================================
 
+add_subdirectory(extern/tetris-core)
+
 # gdextension library dependency linkage
 target_link_libraries(${PROJECT_NAME}
     PUBLIC godot::cpp
+	PRIVATE TetrisCore
     PRIVATE fmt::fmt
     PRIVATE fmt::fmt-header-only
     PRIVATE spdlog::spdlog_header_only
