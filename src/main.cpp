@@ -4,6 +4,10 @@
 #include "util/engine.hpp"
 #include "util/input.hpp"
 
+#include "../extern/tetris-core/src/tetris/Tetra.h"
+#include "../extern/tetris-core/src/tetris/TetraBlocks.h"
+#include "../extern/tetris-core/src/tetris/TetraWorldImpl.h"
+
 namespace rl {
 Main::Main() {
     resource::preload::packed_scene<Level> level{path::scene::Level1};

@@ -19,6 +19,7 @@
 #include "singletons/console.hpp"
 #include "ui/main_dialog.hpp"
 #include "util/engine.hpp"
+#include "tetra/TetraPlayRegion.hpp"
 
 namespace rl {
 static inline console *console_singleton{nullptr};
@@ -36,6 +37,9 @@ void teardown_static_objects() {
 void initialize_extension_module(godot::ModuleInitializationLevel init_level) {
     if (init_level != godot::MODULE_INITIALIZATION_LEVEL_SCENE)
         return;
+
+    godot::ClassDB::register_class<TetraDisplayBlock>();
+    godot::ClassDB::register_class<TetraPlayRegion>();
 
     godot::ClassDB::register_class<rl::Projectile>();
     godot::ClassDB::register_class<rl::ProjectileSpawner>();

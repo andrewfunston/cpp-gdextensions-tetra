@@ -4,5 +4,3 @@
 
 [node name="Main" type="Main"]
 script = ExtResource("1_c2d3a")
-
-[connection signal="custom_signal_example" from="." to="." method="_on_custom_signal_example"]
