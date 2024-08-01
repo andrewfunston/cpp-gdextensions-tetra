@@ -19,6 +19,39 @@
 #include "../extern/tetris-core/src/tetris/TetraWorldImpl.h"
 #include "util/input.hpp"
 
+class TetraInputEvent {
+
+    const float mRepeatDwell;
+
+    bool mIsPressed = false;
+    float mConsumedAccumulator = 0.0;
+
+public:
+    TetraInputEvent(float repeatDwell = .2) :
+        mRepeatDwell(repeatDwell) {}
+
+    bool canConsume() {
+        if (mIsPressed && mConsumedAccumulator<=0.0) {
+            mConsumedAccumulator = mRepeatDwell;
+            return true;
+        }
+        return false;
+    }
+    void release() {
+        mIsPressed = false;
+        mConsumedAccumulator = 0.0;
+    }
+    void press() {
+        mIsPressed = true;
+        mConsumedAccumulator = 0.0;
+    }
+    void subtractDelta(float delta) {
+        if (mIsPressed) {
+            mConsumedAccumulator -= delta;
+        }
+    }
+};
+
 #pragma mark TetraDisplayBlock ---------------------------------------------------------------------------------------------------------
 class TetraDisplayBlock : public godot::Sprite2D {
     GDCLASS(TetraDisplayBlock, godot::Sprite2D);
@@ -67,6 +100,8 @@ class TetraPlayRegion : public godot::Node2D {
     bool mInitialized = false;
     bool mRotateLeft = false;
     bool mRotateRight = false;
+    TetraInputEvent mMoveLeft{};
+    TetraInputEvent mMoveRight{};
 
     double mCumulativeTime = 0.0;
 
@@ -134,6 +169,18 @@ public:
         const auto &inputEvent = godot::Object::cast_to<const godot::InputEvent>(*event);
         mRotateLeft = inputEvent->is_action_pressed("tetra_rotate_left");
         mRotateRight = inputEvent->is_action_pressed("tetra_rotate_right");
+
+        if(inputEvent->is_action_pressed("tetra_move_right")) {
+            mMoveRight.press();
+        } else if(inputEvent->is_action_released("tetra_move_right")) {
+            mMoveRight.release();
+        }
+
+        if(inputEvent->is_action_pressed("tetra_move_left")) {
+            mMoveLeft.press();
+        } else if(inputEvent->is_action_released("tetra_move_left")) {
+            mMoveLeft.release();
+        }
     }
 
     void _process(double delta_time) override {
@@ -146,24 +193,26 @@ public:
         }
 
         mCumulativeTime += delta_time;
+        mMoveLeft.subtractDelta(delta_time);
+        mMoveRight.subtractDelta(delta_time);
 
         bool screenNeedsUpdated = false;
         std::vector<TetraInput> inputs{};
         auto godotInput = godot::Input::get_singleton();
-        if (godotInput->is_key_pressed(godot::Key::KEY_LEFT)) {
+        if (mMoveLeft.canConsume()) {
             inputs.emplace_back(TetraInput::moveLeft);
         }
-        if (godotInput->is_key_pressed(godot::Key::KEY_RIGHT)) {
+        if (mMoveRight.canConsume()) {
             inputs.emplace_back(TetraInput::moveRight);
         }
         if (godotInput->is_key_pressed(godot::Key::KEY_DOWN)) {
             inputs.emplace_back(TetraInput::moveDown);
         }
-        if(mRotateLeft) {
+        if (mRotateLeft) {
             inputs.emplace_back(TetraInput::spinLeft);
             mRotateLeft = false;
         }
-        if(mRotateRight) {
+        if (mRotateRight) {
             inputs.emplace_back(TetraInput::spinRight);
             mRotateRight = false;
         }
