@@ -24,7 +24,7 @@ class TetraInputEvent {
     const float mRepeatDwell;
 
     bool mIsPressed = false;
-    float mConsumedAccumulator = 0.0;
+    double mConsumedAccumulator = 0.0;
 
 public:
     TetraInputEvent(float repeatDwell = .2) :
@@ -45,7 +45,7 @@ public:
         mIsPressed = true;
         mConsumedAccumulator = 0.0;
     }
-    void subtractDelta(float delta) {
+    void subtractDelta(double delta) {
         if (mIsPressed) {
             mConsumedAccumulator -= delta;
         }
